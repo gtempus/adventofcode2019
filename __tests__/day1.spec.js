@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const { fuelCalculator } = require('../day1');
+const { fuelCalculator, fuelCounterUpper } = require('../day1');
 
 describe('Fuel Calculator', () => {
   it('returns 2 for a mass of 12', () => {
@@ -20,5 +20,12 @@ describe('Fuel Calculator', () => {
   xit('returns 33583 for a mass of 100756', () => {
     const result = fuelCalculator(100756);
     expect(result).toBe(33583);
+  });
+});
+
+describe('Fuel Counter-Upper', () => {
+  it('sums a list of masses', () => {
+    const result = fuelCounterUpper([12, 14, 1969, 100756]);
+    expect(result).toBe(34241);
   });
 });

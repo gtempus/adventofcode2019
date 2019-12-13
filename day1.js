@@ -1,4 +1,8 @@
-const { pipe } = require('ramda');
+const {
+  pipe,
+  reduce,
+  add,
+} = require('ramda');
 
 const substract = (num) => (amount) => amount - num;
 const divideBy = (divisor) => (dividend) => dividend / divisor;
@@ -12,4 +16,12 @@ const fuelCalculator = (mass) => (
   )(mass)
 );
 
-module.exports = { fuelCalculator };
+const fuelCounterUpper = (masses) => (
+  reduce(
+    (acc, value) => add(acc, fuelCalculator(value)),
+    0,
+    masses,
+  )
+);
+
+module.exports = { fuelCalculator, fuelCounterUpper };
