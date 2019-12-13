@@ -23,5 +23,7 @@
     "eslint-plugin-import": "^2.19.1",
     "jest": "^24.9.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "ramda": "^0.26.1"
+  }
 }
