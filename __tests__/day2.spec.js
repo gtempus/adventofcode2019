@@ -49,10 +49,9 @@ describe('Execute', () => {
   });
 
   describe('HALT', () => {
-    it('is a no-op for now', () => {
+    it('throws an exception', () => {
       const haltFnWithProgram = haltFn([1, 2, 1, 0]);
-      const result = haltFnWithProgram(0);
-      expect(result).toMatchObject({});
+      expect(() => { haltFnWithProgram(0); }).toThrow(new Error('Halting!'));
     });
 
     describe('Executing an operation', () => {

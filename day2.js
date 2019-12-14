@@ -21,7 +21,7 @@ const fetch = (program) => (position) => program[position];
 const addFn = (program) => (instructionStart) => (
   fetch(program)(program[instructionStart + 1]) + fetch(program)(program[instructionStart + 2])
 );
-const haltFn = () => () => ({});
+const haltFn = () => () => { throw new Error('Halting!'); };
 const decode = (instruction) => (
   /* eslint-disable no-nested-ternary */
   instruction === 1 ? addFn : instruction === 99 ? haltFn : undefined
@@ -43,17 +43,25 @@ const logit = (message) => (input) => (console.debug(message, { input }), input)
 
 const shipsComputer = (program) => {
   programCounter = incrementBy4();
-  return pipe(
-    nextInstruction,
-    logit('sending to `fetch`:'),
-    fetch(program),
-    logit('sending to `decode`:'),
-    decode,
-    logit('sending to `execute`:'),
-    execute(program, 0),
-    logit('sending to `store`:'),
-    store(program),
-  )(program);
+  let output;
+  try {
+    while (true) {
+      output = pipe(
+        nextInstruction,
+        logit('sending to `fetch`:'),
+        fetch(program),
+        logit('sending to `decode`:'),
+        decode,
+        logit('sending to `execute`:'),
+        execute(program, 0),
+        logit('sending to `store`:'),
+        store(program),
+      )(program);
+    }
+  } catch (halt) {
+    console.info('Halting');
+  }
+  return output;
 };
 
 module.exports = {
