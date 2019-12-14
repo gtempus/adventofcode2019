@@ -16,7 +16,9 @@ const fuelCalculator = (mass) => (
   )(mass)
 );
 
-const fuelCalcCalc = (mass) => (mass <= 0 ? 0 : mass + fuelCalcCalc(fuelCalculator(mass)));
+const fuelCalcCalc = (mass, runningTotal = 0) => (
+  mass <= 0 ? runningTotal : fuelCalcCalc(fuelCalculator(mass), mass + runningTotal)
+);
 
 const fuelCalculatorCalculator = (mass) => (fuelCalcCalc(fuelCalculator(mass)));
 
