@@ -17,7 +17,7 @@ describe('Fuel Calculator', () => {
     expect(result).toBe(654);
   });
 
-  xit('returns 33583 for a mass of 100756', () => {
+  it('returns 33583 for a mass of 100756', () => {
     const result = fuelCalculator(100756);
     expect(result).toBe(33583);
   });
