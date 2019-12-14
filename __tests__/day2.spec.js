@@ -5,7 +5,9 @@ const {
   addFn,
   haltFn,
   decode,
+  execute,
   store,
+  shipsComputer,
 } = require('../day2');
 
 describe('Program Counter', () => {
@@ -37,10 +39,10 @@ describe('Decode', () => {
   });
 });
 
-describe('Evaluate', () => {
+describe('Execute', () => {
   describe('ADD', () => {
     it('adds the two values', () => {
-      const addFnWithProgram = addFn([1, 2, 1, 0]);
+      const addFnWithProgram = addFn([1, 0, 2, 0]);
       const result = addFnWithProgram(0);
       expect(result).toBe(3);
     });
@@ -52,13 +54,33 @@ describe('Evaluate', () => {
       const result = haltFnWithProgram(0);
       expect(result).toMatchObject({});
     });
+
+    describe('Executing an operation', () => {
+      it('executes the ADD funtion', () => {
+        const executeWithProgram = execute([1, 2, 1, 0], 0);
+        const result = executeWithProgram(addFn);
+        expect(result).toMatchObject({ value: 3, position: 0 });
+      });
+    });
   });
 
   describe('Storing the result', () => {
     it('stores the value at the given program position', () => {
       const storeWithProgram = store([0, 1, 5, 0]);
-      const result = storeWithProgram(0, 20);
+      const result = storeWithProgram({ position: 0, value: 20 });
       expect(result).toMatchObject([20, 1, 5, 0]);
     });
+  });
+});
+
+describe('Ships Computer', () => {
+  it('executes a simple program that adds', () => {
+    const result = shipsComputer([1, 0, 0, 0, 99]);
+    expect(result).toMatchObject([2, 0, 0, 0, 99]);
+  });
+
+  xit('executes a simple program that multiplies', () => {
+    const result = shipsComputer([2, 3, 0, 3, 99]);
+    expect(result).toMatchObject([2, 3, 0, 6, 99]);
   });
 });
