@@ -16,12 +16,23 @@ const fuelCalculator = (mass) => (
   )(mass)
 );
 
-const fuelCounterUpper = (masses) => (
+const fuelCalcCalc = (mass) => (mass <= 0 ? 0 : mass + fuelCalcCalc(fuelCalculator(mass)));
+
+const fuelCalculatorCalculator = (mass) => (fuelCalcCalc(fuelCalculator(mass)));
+
+const fuelCounterUpper = (masses, calcFn = fuelCalculator) => (
   reduce(
-    (acc, value) => add(acc, fuelCalculator(value)),
+    (acc, value) => add(acc, calcFn(value)),
     0,
     masses,
   )
 );
 
-module.exports = { fuelCalculator, fuelCounterUpper };
+const fuelCounterUpperWithFuel = (masses) => fuelCounterUpper(masses, fuelCalculatorCalculator);
+
+module.exports = {
+  fuelCalculator,
+  fuelCalculatorCalculator,
+  fuelCounterUpper,
+  fuelCounterUpperWithFuel,
+};
