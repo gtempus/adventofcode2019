@@ -91,4 +91,9 @@ describe('Ships Computer', () => {
     const result = shipsComputer([2, 3, 0, 3, 99]);
     expect(result).toMatchObject([2, 3, 0, 6, 99]);
   });
+
+  it('executes a simple program that multiplies and stores a number at the end', () => {
+    const result = shipsComputer([2, 4, 4, 5, 99, 0]);
+    expect(result).toMatchObject([2, 4, 4, 5, 99, 9801]);
+  });
 });
