@@ -3,6 +3,7 @@ const {
   nextInstruction,
   fetch,
   addFn,
+  multFn,
   haltFn,
   decode,
   execute,
@@ -48,9 +49,17 @@ describe('Execute', () => {
     });
   });
 
+  describe('MULTIPLY', () => {
+    it('multiplies the two values', () => {
+      const multFnWithProgram = multFn([2, 0, 2, 0]);
+      const result = multFnWithProgram(0);
+      expect(result).toBe(4);
+    });
+  });
+
   describe('HALT', () => {
     it('throws an exception', () => {
-      const haltFnWithProgram = haltFn([1, 2, 1, 0]);
+      const haltFnWithProgram = haltFn([99, 2, 1, 0]);
       expect(() => { haltFnWithProgram(0); }).toThrow(new Error('Halting!'));
     });
 
@@ -78,7 +87,7 @@ describe('Ships Computer', () => {
     expect(result).toMatchObject([2, 0, 0, 0, 99]);
   });
 
-  xit('executes a simple program that multiplies', () => {
+  it('executes a simple program that multiplies', () => {
     const result = shipsComputer([2, 3, 0, 3, 99]);
     expect(result).toMatchObject([2, 3, 0, 6, 99]);
   });
