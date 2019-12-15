@@ -6,6 +6,7 @@ const {
 /*
  * Roll over, Von Neumann!!!
  */
+
 function* incrementBy4() {
   let index = 0;
   while (true) {
@@ -17,32 +18,50 @@ function* incrementBy4() {
 let programCounter = incrementBy4();
 
 const nextInstruction = () => programCounter.next().value;
-const fetch = (program) => (position) => program[position];
+const fetch = ({ program, pc }) => (
+  {
+    program,
+    pc,
+    value: program[pc],
+  }
+);
 const addFn = (program) => (instructionStart) => (
-  fetch(program)(program[instructionStart + 1]) + fetch(program)(program[instructionStart + 2])
+  fetch({ program, pc: program[instructionStart + 1] }).value
+    + fetch({ program, pc: program[instructionStart + 2] }).value
 );
 const multFn = (program) => (instructionStart) => (
-  fetch(program)(program[instructionStart + 1]) * fetch(program)(program[instructionStart + 2])
+  fetch({ program, pc: program[instructionStart + 1] }).value
+    * fetch({ program, pc: program[instructionStart + 2] }).value
 );
 const haltFn = () => () => { throw new Error('Halting!'); };
-const decode = (instruction) => (
-  /* eslint-disable no-nested-ternary */
-  instruction === 1 ? addFn : instruction === 2 ? multFn : instruction === 99 ? haltFn : undefined
-);
-
-const execute = (program, instructionStart) => (operationFn) => (
+const decode = ({ program, pc, value }) => (
+  /* eslint-disable no-nested-ternary, max-len */
   {
-    value: operationFn(program)(instructionStart),
-    position: program[instructionStart + 3],
+    program,
+    pc,
+    value,
+    op: value === 1 ? addFn : value === 2 ? multFn : value === 99 ? haltFn : undefined,
   }
 );
 
-const store = (program) => ({ position, value }) => (
-  update(position, value, program)
+const execute = ({
+  program, pc, value, op,
+}) => (
+  {
+    program,
+    pc,
+    value,
+    op,
+    evaluation: {
+      value: op(program)(pc),
+      position: program[pc + 3],
+    },
+  }
 );
 
-/* eslint-disable no-sequences */
-const logit = (message) => (input) => (console.debug(message, { input }), input);
+const store = ({ program, evaluation: { position, value } }) => (
+  update(position, value, program)
+);
 
 const shipsComputer = (program) => {
   programCounter = incrementBy4();
@@ -50,21 +69,31 @@ const shipsComputer = (program) => {
   try {
     while (true) {
       output = pipe(
-        nextInstruction,
-        logit('sending to `fetch`:'),
-        fetch(program),
-        logit('sending to `decode`:'),
+        fetch,
         decode,
-        logit('sending to `execute`:'),
-        execute(program, 0),
-        logit('sending to `store`:'),
-        store(program),
-      )(output);
+        execute,
+        store,
+      )({ program: output, pc: nextInstruction() });
     }
   } catch (halt) {
     console.info('Halting');
   }
   return output;
+};
+
+const shipsComputerParamFinder = (program) => {
+  for (let i = 0; i < 100; i += 1) {
+    for (let j = 0; j < 100; j += 1) {
+      const newProgram = [...program];
+      newProgram[1] = i;
+      newProgram[2] = j;
+      const result = shipsComputer(newProgram);
+      if (result[0] === 19690720) {
+        return 100 * result[1] + result[2];
+      }
+    }
+  }
+  return 'No Answer!';
 };
 
 module.exports = {
@@ -77,4 +106,5 @@ module.exports = {
   execute,
   store,
   shipsComputer,
+  shipsComputerParamFinder,
 };
