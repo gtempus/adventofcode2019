@@ -1,4 +1,7 @@
-const { pipe } = require('ramda');
+const {
+  pipe,
+  reduce,
+} = require('ramda');
 
 const split = (directive) => directive.split('');
 
@@ -26,7 +29,29 @@ const convertInstructions = (directives) => (
   directives.map(coordinateFromDirection)
 );
 
+const add = (acc, [x2, y2]) => {
+  const newOne = [...acc];
+  const [x1, y1] = newOne[newOne.length - 1];
+  newOne.push([x1 + x2, y1 + y2]);
+  return newOne;
+};
+
+const removeOrigin = (cartesianPositions) => (
+  cartesianPositions.slice(1)
+);
+
+const translateWire = (cartesianDirectives) => (
+  pipe(
+    reduce(
+      add,
+      [[0, 0]],
+    ),
+    removeOrigin,
+  )(cartesianDirectives)
+);
+
 module.exports = {
   coordinateFromDirection,
   convertInstructions,
+  translateWire,
 };

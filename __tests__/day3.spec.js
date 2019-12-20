@@ -2,6 +2,7 @@
 const {
   coordinateFromDirection,
   convertInstructions,
+  translateWire,
 } = require('../day3');
 
 describe('Convert wire direction to cartesian point', () => {
@@ -31,5 +32,13 @@ describe('Converting a sequence of directives to cartesian coordinates', () => {
     const directives = ['U23', 'D13', 'L67', 'R42'];
     const result = convertInstructions(directives);
     expect(result).toMatchObject([[0, 23], [0, -13], [-67, 0], [42, 0]]);
+  });
+});
+
+describe('Location of wire in coordinates', () => {
+  it('transforms to coordinates by reducing', () => {
+    const cartesianDirectives = [[0, 23], [0, -13], [-67, 0], [42, 0]];
+    const result = translateWire(cartesianDirectives);
+    expect(result).toMatchObject([[0, 23], [0, 10], [-67, 10], [-25, 10]]);
   });
 });
