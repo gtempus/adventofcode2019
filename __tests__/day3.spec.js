@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
-const { coordinateFromDirection } = require('../day3');
+const {
+  coordinateFromDirection,
+  convertInstructions,
+} = require('../day3');
 
 describe('Convert wire direction to cartesian point', () => {
   it('understands U directive', () => {
@@ -20,5 +23,13 @@ describe('Convert wire direction to cartesian point', () => {
   it('understands R directive', () => {
     const result = coordinateFromDirection('R42');
     expect(result).toMatchObject([42, 0]);
+  });
+});
+
+describe('Converting a sequence of directives to cartesian coordinates', () => {
+  it('converts', () => {
+    const directives = ['U23', 'D13', 'L67', 'R42'];
+    const result = convertInstructions(directives);
+    expect(result).toMatchObject([[0, 23], [0, -13], [-67, 0], [42, 0]]);
   });
 });

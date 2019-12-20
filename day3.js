@@ -22,6 +22,11 @@ const coordinateFromDirection = (directive) => (
   )(directive)
 );
 
+const convertInstructions = (directives) => (
+  directives.map(coordinateFromDirection)
+);
+
 module.exports = {
   coordinateFromDirection,
+  convertInstructions,
 };
