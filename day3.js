@@ -50,8 +50,11 @@ const translateWire = (cartesianDirectives) => (
   )(cartesianDirectives)
 );
 
+const mattLength = ([x, y]) => Math.abs(x) + Math.abs(y);
+
 module.exports = {
   coordinateFromDirection,
   convertInstructions,
   translateWire,
+  mattLength,
 };
